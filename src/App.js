@@ -30,22 +30,25 @@ export default class App extends Component {
 
     render() {
         const optionSizes = {
-            'xs': 0,
-            'md': 0,
+            'xs': 7,
+            'sm': 7,
+            'md': 6,
             'lg': 5,
             'xl': 4
         }
         const gameSizes = {
-            'md': 23,
-            'lg': 17,
+            'xs': 17,
+            'sm': 17,
+            'md': 17,
+            'lg': 18,
             'xl': 19
         }
         return (
             <div className='gamePageBackground'>
-                <Row align='middle' justify='center' gutter={[8, 8]} >
+                <Row align='top' justify='center' gutter={[8, 8]} >
                     <Col {...optionSizes}>
                         {/*Game Options*/}
-                        <Card title='Options' bordered={false} style={{height: '100%'}}>
+                        <Card title='Options' bordered={false} style={{height: '100%'}} >
                             <GameOptions newGame={this.startNewGame} startGameFailed={this.endGame}/>
                         </Card>
                     </Col>

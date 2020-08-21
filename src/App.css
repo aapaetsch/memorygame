@@ -8,8 +8,6 @@
   height: 100%;
 }
 
-
-
 .gamePageBackground {
   background-color: #bfbfbf;
   height: 100%;
@@ -21,7 +19,6 @@
 .cardHeader {
   background-color: #359c99;
   color: #fff;
-  min-height: 48px;
   margin-bottom: -1px;
   padding-bottom: 9px;
   padding-top: 16px;
