@@ -9,7 +9,7 @@
 - Players have the option of selecting one of 5 board sizes
 - You also may choose to play a one player game or two player game
     - If you select a single player game, you can adjust the timelimit starting at 1 min all the way to 10 min
-        - Once the timelimit runs out you lose
+        - Once the time limit runs out you lose
     - For a two player game each players matches are counted, the player with the most matches wins
 - Once you have selected your options, click the <u>New Game</u> button to begin
 - Click on the cards once you have started
