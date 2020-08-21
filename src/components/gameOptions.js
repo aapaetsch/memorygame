@@ -13,10 +13,6 @@ export default class GameOptions extends Component {
         }
     }
 
-    componentDidMount() {
-
-    }
-
     startGame = (values) => {
         this.props.newGame(values);
     }
@@ -30,19 +26,12 @@ export default class GameOptions extends Component {
     }
 
     render() {
-        const formItemLayout = {
-            labelCol: {
-                span: 7
-            },
-            wrapperCol: {
-                span: 7
-            }
-        }
 
         const onFinishFailed = (error) => {
             message.error('There was an error starting the game.');
             this.props.startGameFailed();
         }
+
         return (
             <Form
                 name='MemoryGameOptions'

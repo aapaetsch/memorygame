@@ -1,13 +1,13 @@
 import React, { Component, createRef } from 'react';
-import { Row, Col, Select, Button, Card} from 'antd';
+import { Row, Col, Card} from 'antd';
 import MemoryGame from './components/memoryGame';
 import GameOptions from "./components/gameOptions";
 import './App.css';
 
 
 export default class App extends Component {
-    constructor(){
-        super();
+    constructor(props){
+        super(props);
         this.state = {
             boardSize: 4,
             gameStarted: false,
@@ -16,6 +16,7 @@ export default class App extends Component {
         }
         this.gameRef = createRef();
     }
+
 
     startNewGame = (values) => {
         this.setState({...values, gameStarted: true}, () => {

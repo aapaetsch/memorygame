@@ -1,11 +1,7 @@
 import React, { Component } from 'react';
-import {message, Row, Col, Modal, Button, Select, Form} from 'antd';
+import {message, Row, Col} from 'antd';
 import {GameTile, Timer, PlayerStats, winnerMessage, loserMessage} from './gameComponents';
 import '../App.css';
-import GameOptions from "./gameOptions";
-import {SettingOutlined } from '@ant-design/icons';
-
-
 
 export default class MemoryGame extends Component {
     constructor(props){
@@ -31,9 +27,9 @@ export default class MemoryGame extends Component {
         //this method gets all of the images for the game cards
         const images = [];
         for (let i = 1; i < 28; i++){
-            images.push(`/images/green${i}.png`);
-            images.push(`/images/red${i}.png`);
-            images.push(`/images/purple${i}.png`);
+            images.push(`/memorygame/images/green${i}.png`);
+            images.push(`/memorygame/images/red${i}.png`);
+            images.push(`/memorygame/images/purple${i}.png`);
         }
 
         return images;
@@ -180,7 +176,6 @@ export default class MemoryGame extends Component {
         //Create the gameboard with new states on each render.
         let myGameBoard=[];
         const width = (1 / (this.props.boardSize)) * 85;
-        const rowHeight = 75 / (this.props.boardSize - 1);
         let k = 0;
 
         for (let i = 0; i < this.props.boardSize - 1; i++){
@@ -206,7 +201,7 @@ export default class MemoryGame extends Component {
 
         return (
             <div>
-                <Row align='middle' justify='center' className='cardHeader' id={'123'}>
+                <Row align='middle' justify='center' className='cardHeader'>
                     <Col span={8}>
                         {this.props.players === 2 ?
                             (

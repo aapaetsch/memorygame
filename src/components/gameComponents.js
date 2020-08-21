@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { Statistic, Modal } from 'antd';
-import { QuestionCircleOutlined } from '@ant-design/icons';
 import '../App.css';
 
+const imgLocation = '';
 export const GameTile = (props) => {
     let cardStyles = 'gameCol';
     if (props.players === 2){
@@ -27,7 +27,7 @@ export const GameTile = (props) => {
                     <img
                         id={props.id}
                         className='imageResize'
-                        src='/images/questionmark.png'
+                        src={`/memoryGame/images/questionmark.png`}
                         alt=''/>
                 )
             }
@@ -58,7 +58,6 @@ export const PlayerStats = props => {
 
 const numToWord = require('number-to-words');
 export const winnerMessage = props => {
-    console.log(props)
     if (props.players === 2) {
 
         if (props.matches[1] === props.matches[2]) {
