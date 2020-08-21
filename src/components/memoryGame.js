@@ -10,10 +10,9 @@ export default class MemoryGame extends Component {
         this.state = {
             selected: null,
             gameBoard: [],
-            remaining: 0,
+            remaining: -1,
             isProcessing: false,
             newGameTrigger: 0,
-            winner: false,
             matches: { 1:0, 2:0 },
             turns: 0,
             currentPlayer: 1,
@@ -51,7 +50,6 @@ export default class MemoryGame extends Component {
         this.setState({
             remaining: uniqueCards,
             isProcessing: false,
-            winner: false,
             currentPlayer: 1,
             matches: { 1:0, 2:0 },
             selected: null,
@@ -83,9 +81,8 @@ export default class MemoryGame extends Component {
     }
 
     handleTileClick = (e) => {
-        console.log(e.target);
-        let index = e.target.id;
 
+        let index = e.target.id;
         if (index === this.state.selected){
             message.warning('Card is already selected', 1);
 
@@ -112,19 +109,16 @@ export default class MemoryGame extends Component {
                         matches[this.state.currentPlayer] += 1
 
                         this.setState({
-                            selected: null,
-                            gameBoard: gameBoard,
                             remaining: this.state.remaining - 1,
                             matches: matches,
                         }, () => {
-
+                            let timeout = 0;
                             if (this.props.players === 2){
-                                //Delay the win check for 2 player game
-                                setTimeout( () => this.checkWin(), 500);
-
-                            } else {
-                                this.checkWin();
+                                timeout = 500;
                             }
+
+                            this.checkWin();
+                            this.endTurn(gameBoard,timeout);
                         });
 
                     } else {
@@ -132,15 +126,7 @@ export default class MemoryGame extends Component {
                         this.setState({ gameBoard: [...gameBoard] },  () => {
                             gameBoard[index].clicked = false;
                             gameBoard[this.state.selected].clicked = false;
-
-                            setTimeout(  () => {
-                                this.setState({
-                                    selected: null,
-                                    gameBoard:gameBoard,
-                                    currentPlayer: 3 - this.state.currentPlayer,
-                                    isProcessing: false})
-                            }, 500);
-
+                            this.endTurn(gameBoard, 500);
                         });
                     }
                 }
@@ -150,15 +136,25 @@ export default class MemoryGame extends Component {
         }
     }
 
+    endTurn = (gameBoard, timeoutLength) => {
+        setTimeout( () => {
+            this.setState({
+                selected: null,
+                gameBoard: gameBoard,
+                currentPlayer: 3 - this.state.currentPlayer,
+                isProcessing: false
+            });
+        }, timeoutLength);
+    }
+
     checkWin = () => {
         //If there are no remaining matches, show a win notification
-        if (this.state.remaining === 0 && this.state.winner === false){
+        if (this.state.remaining === 0){
             winnerMessage({matches: this.state.matches, players: this.props.players} );
-            this.setState({winner: true});
             this.props.endGame();
         }
         //switch the current player at the end of a turn
-        this.setState({isProcessing: false, currentPlayer: 3 - this.state.currentPlayer});
+        // this.setState({isProcessing: false, currentPlayer: 3 - this.state.currentPlayer});
     }
 
     timeLimitReached = () => {
@@ -215,7 +211,7 @@ export default class MemoryGame extends Component {
                             ) : (
                                 <Timer
                                     newGame={this.state.newGameTrigger}
-                                    paused={this.state.winner}
+                                    paused={this.state.remaining === 0}
                                     limit={this.props.timeLimit}
                                     limitReached={this.timeLimitReached}
                                     showWinMessage={this.soloWinMessage}
