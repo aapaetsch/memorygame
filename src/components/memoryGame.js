@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
-import { message, Row, Col, Modal } from 'antd';
+import {message, Row, Col, Modal, Button, Select, Form} from 'antd';
 import {GameTile, Timer, PlayerStats, winnerMessage, loserMessage} from './gameComponents';
 import '../App.css';
+import {Option} from "antd/es/mentions";
 
 
 export default class MemoryGame extends Component {
@@ -177,13 +178,14 @@ export default class MemoryGame extends Component {
     render() {
         //Create the gameboard with new states on each render.
         let myGameBoard=[];
-        const width = (1 / (this.props.boardSize - 1)) * 90;
+        const width = (1 / (this.props.boardSize)) * 85;
+        const rowHeight = 75 / (this.props.boardSize - 1);
         let k = 0;
 
-        for (let i = 0; i < this.props.boardSize; i++){
+        for (let i = 0; i < this.props.boardSize - 1; i++){
             let row = [];
 
-            for (let j = 0; j < this.props.boardSize - 1; j++){
+            for (let j = 0; j < this.props.boardSize; j++){
 
                 const cell = (
                     <GameTile
@@ -198,7 +200,7 @@ export default class MemoryGame extends Component {
                 k++;
             }
 
-            myGameBoard.push(<div className='gameRow'>{row}</div>)
+            myGameBoard.push(<div className='gameRow' >{row}</div>)
         }
 
         return (
@@ -222,8 +224,7 @@ export default class MemoryGame extends Component {
                     <Col span={8}>
                         <h2 style={{color: '#fff'}}>Memory Game</h2>
                     </Col>
-                    <Col span={8}>
-                    </Col>
+                    <Col span={8}/>
                 </Row>
                 <div className='cardBody'>
                     {myGameBoard}
