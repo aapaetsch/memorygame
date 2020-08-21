@@ -2,7 +2,9 @@ import React, { Component } from 'react';
 import {message, Row, Col, Modal, Button, Select, Form} from 'antd';
 import {GameTile, Timer, PlayerStats, winnerMessage, loserMessage} from './gameComponents';
 import '../App.css';
-import {Option} from "antd/es/mentions";
+import GameOptions from "./gameOptions";
+import {SettingOutlined } from '@ant-design/icons';
+
 
 
 export default class MemoryGame extends Component {
@@ -12,12 +14,12 @@ export default class MemoryGame extends Component {
             selected: null,
             gameBoard: [],
             remaining: -1,
-            isProcessing: false,
             newGameTrigger: 0,
             matches: { 1:0, 2:0 },
             turns: 0,
             currentPlayer: 1,
         }
+        this.isProcessing = false;
 
     }
     componentDidMount() {
@@ -48,9 +50,9 @@ export default class MemoryGame extends Component {
         cards = this.randomizeCards([...cards, ...cards]);
 
         this.setBoard(cards);
+        this.isProcessing = false;
         this.setState({
             remaining: uniqueCards,
-            isProcessing: false,
             currentPlayer: 1,
             matches: { 1:0, 2:0 },
             selected: null,
@@ -87,16 +89,17 @@ export default class MemoryGame extends Component {
         if (index === this.state.selected){
             message.warning('Card is already selected', 1);
 
-        } else if (!this.state.isProcessing && this.props.gameStarted) {
-            this.setState({isProcessing: true});
+        } else if (!this.isProcessing && this.props.gameStarted) {
+            this.isProcessing = true;
 
             let gameBoard = [...this.state.gameBoard];
-            if (!gameBoard[index].clicked && !gameBoard[index].matched){
+            if (!gameBoard[index].matched && !gameBoard[index].clicked){
                 gameBoard[index].clicked = true;
 
                 if (this.state.selected === null){
                     //If the user has not selected another card this turn, store the currently selected card
-                    this.setState({selected: index, gameBoard: gameBoard, isProcessing: false});
+                    this.setState({selected: index, gameBoard: gameBoard});
+                    this.isProcessing = false;
 
                 } else {
                     //If the user has selected 2 cards, check if they are the same image
@@ -131,6 +134,8 @@ export default class MemoryGame extends Component {
                         });
                     }
                 }
+            } else {
+                this.isProcessing = false;
             }
         } else if (!this.props.gameStarted) {
             message.error("Please start a new game!");
@@ -140,11 +145,12 @@ export default class MemoryGame extends Component {
     endTurn = (gameBoard, timeoutLength) => {
         setTimeout( () => {
             this.setState({
+                turns: this.state.turns + 1,
                 selected: null,
                 gameBoard: gameBoard,
                 currentPlayer: 3 - this.state.currentPlayer,
-                isProcessing: false
             });
+            this.isProcessing = false;
         }, timeoutLength);
     }
 
@@ -154,24 +160,19 @@ export default class MemoryGame extends Component {
             winnerMessage({matches: this.state.matches, players: this.props.players} );
             this.props.endGame();
         }
-        //switch the current player at the end of a turn
-        // this.setState({isProcessing: false, currentPlayer: 3 - this.state.currentPlayer});
     }
 
     timeLimitReached = () => {
         //End the game and show a lose message if timelimit is reached
         this.props.endGame();
-        loserMessage(this.state.remaining);
-        this.setState({isProcessing: false});
+        loserMessage({remaining: this.state.remaining, turns: this.state.turns});
+        this.isProcessing = false;
     }
 
     soloWinMessage = (time, showMessage) => {
         //Show a different win message for single player game
         if (!showMessage){
-            Modal.success({
-                title: 'Winner!',
-                content: `Player wins with ${time} remaining.`
-            })
+            winnerMessage({turns: this.state.turns, players: this.props.players, time: time});
         }
     }
 
@@ -205,7 +206,7 @@ export default class MemoryGame extends Component {
 
         return (
             <div>
-                <Row align='middle' justify='center' className='cardHeader'>
+                <Row align='middle' justify='center' className='cardHeader' id={'123'}>
                     <Col span={8}>
                         {this.props.players === 2 ?
                             (

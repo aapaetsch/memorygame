@@ -4,7 +4,6 @@ import { QuestionCircleOutlined } from '@ant-design/icons';
 import '../App.css';
 
 export const GameTile = (props) => {
-
     let cardStyles = 'gameCol';
     if (props.players === 2){
         cardStyles += ` gameColP${props.cp}`
@@ -59,7 +58,7 @@ export const PlayerStats = props => {
 
 const numToWord = require('number-to-words');
 export const winnerMessage = props => {
-
+    console.log(props)
     if (props.players === 2) {
 
         if (props.matches[1] === props.matches[2]) {
@@ -84,6 +83,14 @@ export const winnerMessage = props => {
                 content: `Player ${winner} has ${numToWord.toWords(diff)} more pairs than player ${3 - winner}.`
             });
         }
+    } else {
+
+        if (props.time !== undefined){
+            return Modal.success({
+                title: 'Winner!',
+                content: `Player took ${props.turns} turns and had ${props.time} remaining. `
+            })
+        }
     }
 }
 
@@ -91,7 +98,7 @@ export const loserMessage = props => {
     return (
         Modal.error({
             title: 'You Lose!',
-            content: `You have run out of time with ${props} pairs remaining.`
+            content: `You took ${props.turns} turns and have run out of time with ${props.remaining} pairs remaining.`
         })
     )
 }
@@ -132,7 +139,12 @@ export class Timer extends Component {
             this.props.showWinMessage(timeString, this.winShown);
             this.winShown = true;
 
-            return <h2 style={{color: '#fff'}}>{timeString}</h2>
+            return (
+                <div>
+                    <span className='countdownTimer timerLabel'>Time Remaining:</span>
+                    <h2 style={{color: '#fff', display: 'inline-block'}}>{timeString}</h2>
+                </div>
+                )
 
         } else {
 
