@@ -27,7 +27,7 @@ export const GameTile = (props) => {
                     <img
                         id={props.id}
                         className='imageResize'
-                        src={`/memoryGame/images/questionmark.png`}
+                        src={`/memorygame/images/questionmark.png`}
                         alt=''/>
                 )
             }
