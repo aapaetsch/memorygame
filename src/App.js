@@ -1,63 +1,63 @@
-import React, { Component } from 'react';
-import { Row, Col, Select, Button} from 'antd';
+import React, { Component, createRef } from 'react';
+import { Row, Col, Select, Button, Card} from 'antd';
 import MemoryGame from './components/memoryGame';
+import GameOptions from "./components/gameOptions";
 import './App.css';
 
-const { Option } = Select;
 
 export default class App extends Component {
     constructor(){
         super();
         this.state = {
-            gutter: [8, 8],
-            boardSize: 3,
+            boardSize: 4,
             gameStarted: false,
-
+            players: 1,
+            timeLimit: 3,
         }
+        this.gameRef = createRef();
     }
 
-    handleSizeSelection = (value) => {
-        this.setState({gameSize: Number(value)});
+    startNewGame = (values) => {
+        this.setState({...values, gameStarted: true}, () => {
+            this.gameRef.current.newGame()
+        });
+
     }
 
-    startNewGame = () => {
-        this.setState({gameStarted: true});
+    endGame = () => {
+        this.setState({gameStarted: false});
     }
 
     render() {
+        const optionSizes = {
+            'xs': 0,
+            'sm': 22,
+            'md': 22,
+            'lg': 5,
+            'xl': 4
+        }
+        const gameSizes = {
+            'md': 22,
+            'lg': 17,
+            'xl': 18
+        }
         return (
             <div className='gamePageBackground'>
-                <Row
-                    justify='center'
-                    align='middle'
-                    gutter={this.state.gutter}
-                >
-                    <Col span={22}>
-                        <div className='cardHeader'>
-                            <h3 style={{color: '#fff'}}>Match Up</h3>
-                            <span style={{paddingRight: '5px'}}>Board Size: </span>
-                            <Select
-                                defaultValue='3'
-                                style={{marginRight:"20px"}}
-                                onChange={this.handleSizeSelection}
-                            >
-                                <Option value='3'>3 x 3</Option>
-                                <Option value='6'>6 x 6</Option>
-                                <Option value='9'>9 x 9</Option>
-                            </Select>
-                            <Button
-                                type='primary'
-                                onClick={this.startNewGame}
-                            >
-                                New Game!
-                            </Button>
-                        </div>
-                        <div className='cardBody'>
-                            <MemoryGame
-                                gameStarted={this.state.gameStarted}
-                                boardSize={this.state.boardSize}
+                <Row align='middle' justify='center' gutter={[8, 8]}>
+                    <Col {...optionSizes}>
+                    {/*Game Options*/}
+                        <Card title='Options' bordered={false}>
+                            <GameOptions newGame={this.startNewGame} startGameFailed={this.endGame}/>
+                        </Card>
+                    </Col>
+                    <Col {...gameSizes}>
+                    {/*Game Board*/}
+                        <MemoryGame
+                            ref={this.gameRef}
+                            {...this.state}
+                            endGame={this.endGame}
+                            newGame={this.startNewGame}
                             />
-                        </div>
                     </Col>
                 </Row>
             </div>
